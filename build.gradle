@@ -16,6 +16,7 @@ buildscript {
 
 apply plugin: "spring-boot"
 apply plugin: "kotlin"
+apply plugin: "groovy"
 apply plugin: "kotlin-spring"
 
 dependencyManagement {
@@ -51,6 +52,10 @@ dependencies {
     compile "com.github.vidstige:jadb"
 
     compile "com.miglayout:miglayout-swing"
+
+    testCompile "org.spockframework:spock-core"
+    testCompile "org.spockframework:spock-spring"
+    testCompile "org.springframework.boot:spring-boot-starter-test"
 }
 
 wrapper {

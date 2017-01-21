@@ -10,9 +10,8 @@ import java.awt.image.BufferedImage
 import java.io.File
 import java.io.FilterInputStream
 import java.io.InputStream
-import java.nio.charset.StandardCharsets
 import java.nio.file.Files
-import java.util.function.Consumer
+import java.util.concurrent.TimeUnit
 import javax.imageio.ImageIO
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.memberProperties
@@ -47,6 +46,8 @@ class ScreenshotCollector(val device: JadbDevice, val callback: (BufferedImage) 
             logger.info("Looking for screenshots in {}", directory)
             var lastRead: File? = null
             while (run) {
+                val start = System.currentTimeMillis()
+                val next = start + 10
                 // List all files
                 val files = (directory.listFiles()?.toList() ?: emptyList<File>())
                         .filter { file -> file.isFile && file.name.endsWith(".png") }
@@ -63,6 +64,10 @@ class ScreenshotCollector(val device: JadbDevice, val callback: (BufferedImage) 
                         // Clean up
                         //files.slice(0..(files.size - 1)).forEach { it.delete() }
                     }
+                }
+                val time = System.currentTimeMillis()
+                if (time < next) {
+                    Thread.sleep(next - time)
                 }
             }
         }
@@ -82,13 +87,16 @@ class ScreenshotCollector(val device: JadbDevice, val callback: (BufferedImage) 
                     val unfilteredStream = unfilter(videoStream)
                     while (run) {
                         val read = unfilteredStream.read(buffer)
+                        if (read < 0) {
+                            break
+                        }
                         ffmpeg.outputStream.write(buffer, 0, read)
                     }
                 }
             } finally {
                 try {
                     logger.info("Cleaning out temporary image directory")
-                    directory.deleteRecursively()
+                    //directory.deleteRecursively()
                 } catch (e: Throwable) {
                     logger.warn("Could not remove {}", directory, e)
                 }
