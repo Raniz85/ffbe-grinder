@@ -20,8 +20,11 @@ import javax.imageio.ImageIO
 @Component
 class DeviceController {
 
-    @Value("\${ffmpeg.loctation:ffmpeg}")
+    @Value("\${ffmpeg.location:ffmpeg}")
     val ffmpegLocation = "ffmpeg"
+
+    @Value("\${adb.location:adb}")
+    val adbLocation = "adb"
 
     companion object : KLogging()
 
@@ -98,7 +101,7 @@ class DeviceController {
         val device = currentDevice ?: return
         val collector = this.collector
         if (collector == null || !collector.run) {
-            this.collector = ScreenshotCollector(device) { image ->
+            this.collector = ScreenshotCollector(device, adbLocation, ffmpegLocation) { image ->
                 screenshotListeners.forEach { it(image) }
             }
         }

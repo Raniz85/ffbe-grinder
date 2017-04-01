@@ -7,112 +7,106 @@ package se.raneland.ffbe.service
 import mu.KLogging
 import se.vidstige.jadb.JadbDevice
 import java.awt.image.BufferedImage
-import java.io.File
+import java.io.DataInputStream
+import java.io.EOFException
 import java.io.FilterInputStream
 import java.io.InputStream
-import java.nio.file.Files
-import java.util.concurrent.TimeUnit
+import java.nio.ByteBuffer
+import java.nio.IntBuffer
 import javax.imageio.ImageIO
+import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
-import kotlin.reflect.memberProperties
 
-class ScreenshotCollector(val device: JadbDevice, val callback: (BufferedImage) -> Unit) {
+class ScreenshotCollector(val device: JadbDevice, val adbLocation: String, val ffmpegLocation: String,
+        val callback: (BufferedImage) -> Unit) : Thread("screenshot-collector") {
 
-    companion object: KLogging()
+    companion object: KLogging() {
+        const val width = 720
+        const val height = 1280
+    }
 
-    val  directory: File
+    var ffmpeg : Process
+    var imageStream : InputStream
 
-    val locator = ScreenshotLocator()
-    val capturer = ScreenshotGenerator()
+    val streamLock = Any()
 
     @Volatile var run: Boolean = true
 
+    init {
+        ffmpeg = startFfmpeg()
+        imageStream = ffmpeg.inputStream
+        start()
+    }
+
+    private fun startFfmpeg() : Process {
+        logger.info("Starting ffmpeg")
+        val adbCommand = "${adbLocation} -s ${device.serial} shell screenrecord --output-format=h264 --time-limit=180 --size=${width}x${height} - | ${ffmpegLocation} -r 60 -i - -f image2pipe -c:v rawvideo -pix_fmt argb -r 5 -"
+        //val adbCommand = "${adbLocation} -s ${device.serial} shell screenrecord --output-format=h264 --time-limit=180 --size=${width}x${height} - "
+        //val adbCommand = "ffmpeg -f rawvideo -pix_fmt rgb24 -video_size ${width}x${height} -r 5 -i /dev/urandom -f image2pipe -c:v rawvideo -pix_fmt rgb24 -r 5 -"
+        logger.debug(adbCommand)
+        return ProcessBuilder()
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                .command("sh", "-c", adbCommand)
+                .start()
+    }
+
     fun stopAndWait() {
         run = false
-        logger.info("Waiting for threads to finish")
-        locator.join()
-        capturer.join()
+        ffmpeg.destroyForcibly()
+        imageStream.close()
+        interrupt()
+        logger.info("Waiting for collector to finish")
+        join()
     }
 
-    init {
-        directory = Files.createTempDirectory("ffbe").toFile()
-        locator.start()
-        capturer.start()
+    fun restartCapturing() {
+        synchronized(streamLock) {
+            ffmpeg.destroyForcibly()
+            imageStream.close()
+
+            ffmpeg = startFfmpeg()
+            imageStream = ffmpeg.inputStream
+        }
     }
 
-    inner class ScreenshotLocator : Thread("screenshot-collector") {
-
-        override fun run() {
-            logger.info("Looking for screenshots in {}", directory)
-            var lastRead: File? = null
+    override fun run() {
+        logger.info("Starting screenshot collection")
+        while (run) {
+            val currentImage = IntBuffer.allocate(width * height)
+            val dataStream = DataInputStream(imageStream)
             while (run) {
-                val start = System.currentTimeMillis()
-                val next = start + 10
-                // List all files
-                val files = (directory.listFiles()?.toList() ?: emptyList<File>())
-                        .filter { file -> file.isFile && file.name.endsWith(".png") }
-                        .sorted()
 
-                if (files.size >= 2) {
-                    // Load the penultimate image
-                    val imageFile = files[files.size - 2]
-                    if (lastRead != imageFile) {
-                        val image = ImageIO.read(imageFile)
-                        lastRead = imageFile
-                        callback(image)
-
-                        // Clean up
-                        //files.slice(0..(files.size - 1)).forEach { it.delete() }
-                    }
+                // Read images
+                try {
+                    currentImage.put(dataStream.readInt())
+                } catch (e: EOFException) {
+                    logger.debug("Ffmpeg has died")
+                    break
                 }
-                val time = System.currentTimeMillis()
-                if (time < next) {
-                    Thread.sleep(next - time)
+                if (currentImage.remaining() == 0) {
+                    // Extract pixels from buffer
+                    val pixels = currentImage.array()
+                    val image = BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+                    image.raster.setDataElements(0, 0, width, height, pixels)
+                    callback(image)
+                    currentImage.clear()
                 }
             }
+            if (run) {
+                logger.info("Starting screenshot collection from fresh ffmpeg")
+                restartCapturing()
+            }
         }
+        logger.info("Ending screenshot collection")
     }
 
-    inner class ScreenshotGenerator : Thread("screenshot-collector") {
-
-        override fun run() {
-            logger.info("Starting ffmpeg output to {}", directory)
-            val ffmpeg = ProcessBuilder()
-                    .command("ffmpeg", "-r", "60", "-i", "-", "-y", "-r", "5", "${directory}/%05d.png")
-                    .start()
-            val buffer = ByteArray(1024)
-            try {
-                logger.info("Starting screen recording")
-                device.executeShell("screenrecord", "--output-format=h264", "--time-limit=180", "--size=720x1280", "-").use { videoStream ->
-                    val unfilteredStream = unfilter(videoStream)
-                    while (run) {
-                        val read = unfilteredStream.read(buffer)
-                        if (read < 0) {
-                            break
-                        }
-                        ffmpeg.outputStream.write(buffer, 0, read)
-                    }
-                }
-            } finally {
-                try {
-                    logger.info("Cleaning out temporary image directory")
-                    //directory.deleteRecursively()
-                } catch (e: Throwable) {
-                    logger.warn("Could not remove {}", directory, e)
-                }
-                logger.info("Killing ffmpeg")
-                ffmpeg.destroy()
-            }
+    private fun unfilter(stream: InputStream): InputStream {
+        if (stream is FilterInputStream) {
+            val inField = FilterInputStream::class.memberProperties
+                    .find { it.name == "in" } ?: throw Error("FilterInputStream has no 'in' field")
+            inField.isAccessible = true
+            return inField.get(stream) as InputStream
         }
-
-        private fun unfilter(stream: InputStream): InputStream {
-            if (stream is FilterInputStream) {
-                val inField = FilterInputStream::class.memberProperties
-                        .find { it.name == "in" } ?: throw Error("FilterInputStream has no 'in' field")
-                inField.isAccessible = true
-                return inField.get(stream) as InputStream
-            }
-            return stream
-        }
+        return stream
     }
 }
