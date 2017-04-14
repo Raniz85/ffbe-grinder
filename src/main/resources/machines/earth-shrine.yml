@@ -19,6 +19,31 @@ states:
                 name: missions.png
                 x: 223
                 y: 337
+            Refresh NRG with Lapis:
+                type: imageRegion
+                name: refreshWithLapisButton.png
+                x: 394
+                y: 612
+    Refresh NRG with Lapis:
+        actions:
+            - type: tap
+              locations: refreshWithLapis
+        transitions:
+            Confirm Refresh with Lapis:
+                type: imageRegion
+                name: yesRefreshWithLapisButton.png
+                x: 396
+                y: 666
+    Confirm Refresh with Lapis:
+        actions:
+            - type: tap
+              locations: confirmRefreshWithLapis
+        transitions:
+            Missions Screen:
+                type: imageRegion
+                name: missions.png
+                x: 223
+                y: 337
     Missions Screen:
         actions:
             - type: tap

@@ -14,9 +14,11 @@
     companion3: 0.5, 0.785
     companion4: 0.5, 0.934
     companionChangedOk: 0.5, 0.578
+    confirmRefreshWithLapis: 0.693, 0.557
     depart: 0.5, 0.848
     dontRequestFriend: 0.25, 0.732
     missionsNext: 0.5, 0.871
+    refreshWithLapis: 0.693, 0.512
     resultsNext: 0.5, 0.879
     stageSelect2: 0.5, 0.644
 
