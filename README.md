@@ -1,5 +1,7 @@
 # ffbe-grinder
-Java application to grind stages in Final Fantasy Brave Exvius
+Java application to grind stages in Final Fantasy Brave Exvius.
+
+Currently only Earth Shrine with lapis refresh is implemented.
 
 # Dependencies
 Requires ffmpeg and adb to be installed.
