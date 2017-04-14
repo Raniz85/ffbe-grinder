@@ -1,0 +1,121 @@
+name: Earth Shrine
+description: Runs the Earth Shrine
+initialState: Start
+states:
+    Start:
+        transitions:
+            Earth Shrine Quest Selection:
+                type: imageRegion
+                name: earth-shrine.png
+                x: 145
+                y: 263
+    Earth Shrine Quest Selection:
+        actions:
+            - type: tap
+              locations: stageSelect2
+        transitions:
+            Missions Screen:
+                type: imageRegion
+                name: missions.png
+                x: 223
+                y: 337
+    Missions Screen:
+        actions:
+            - type: tap
+              locations: missionsNext
+        transitions:
+            Companion Selection:
+                type: time
+                delay: PT2S
+    Companion Selection:
+        actions:
+            - type: tap
+              locations: companion3
+        transitions:
+            Party Selection:
+                type: time
+                delay: PT2S
+    Companion Selection 2:
+        actions:
+            - type: tap
+              locations: companion0
+        transitions:
+            Party Selection:
+                type: time
+                delay: PT2S
+    Party Selection:
+        actions:
+            - type: tap
+              locations: depart
+        transitions:
+            Companion Changed:
+                type: imageRegion
+                name: companionChanged.png
+                x: 106
+                y: 611
+            Kill Monsters:
+                type: imageRegion
+                name: autoCombat.png
+                x: 5
+                y: 1197
+    Companion Changed:
+        actions:
+            - type: tap
+              locations: companionChangedOk
+        transitions:
+            Companion Selection 2:
+                type: time
+                delay: PT5S
+    Kill Monsters:
+        actions:
+            - type: tap
+              locations: [character1, character2]
+              repeat: true
+        transitions:
+            Results:
+                type: imageRegion
+                name: gilResults.png
+                x: 213
+                y: 500
+    Results:
+        actions:
+            - type: tap
+              locations: [center, resultsNext]
+        transitions:
+            UnitResults:
+                type: time
+                delay: PT3S
+    UnitResults:
+        actions:
+            - type: tap
+              locations: [center, resultsNext]
+        transitions:
+            Item Results:
+                type: time
+                delay: PT3S
+    Item Results:
+        actions:
+            - type: tap
+              locations: [center, resultsNext]
+        transitions:
+            Friend Request:
+                type: imageRegion
+                name: friendRequest.png
+                x: 208
+                y: 359
+            Earth Shrine Quest Selection:
+                type: imageRegion
+                name: earth-shrine.png
+                x: 145
+                y: 263
+    Friend Request:
+        actions:
+            - type: tap
+              locations: dontRequestFriend
+        transitions:
+            Earth Shrine Quest Selection:
+                type: imageRegion
+                name: earth-shrine.png
+                x: 145
+                y: 263
+

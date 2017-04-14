@@ -36,7 +36,8 @@ private val yamlMapper = ObjectMapper(YAMLFactory()).apply {
 }
 
 private val bundledGraphs : Map<String, URL> = mapOf(
-        "earth-shrine.yml" to getResource("/machines/earth-shrine.yml")
+        "earth-shrine.yml" to getResource("/machines/earth-shrine.yml"),
+        "earth-shrine-no-lapis-refresh.yml" to getResource("/machines/earth-shrine-no-lapis-refresh.yml")
 )
 
 private fun getResource(path: String) = StateGraph::class.java.getResource(path)
