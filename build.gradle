@@ -23,6 +23,8 @@ dependencyManagement {
     dependencies {
         dependency "com.github.vidstige:jadb:v1.0.1"
 
+        dependency "com.fasterxml.jackson.module:jackson-modules-java8:2.8.7"
+
         dependency "com.miglayout:miglayout-swing:5.0"
 
         dependency "io.github.microutils:kotlin-logging:1.4.4"
@@ -56,11 +58,15 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind"
     compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin"
-    compile "com.fasterxml.jackson.module:jackson-module-java8"
+    compile "com.fasterxml.jackson.module:jackson-modules-java8"
 
     testCompile "org.spockframework:spock-core"
     testCompile "org.spockframework:spock-spring"
     testCompile "org.springframework.boot:spring-boot-starter-test"
+}
+
+bootRun {
+    jvmArgs = ["-Djava.awt.headless=false"]
 }
 
 wrapper {
