@@ -51,7 +51,7 @@ class MainWindow// Set up the UI
     var logAppender: TextViewAppender? = null
 
     init {
-        preferredSize = Dimension(1200, 850)
+        preferredSize = Dimension(900, 850)
         addWindowListener(object: WindowAdapter() {
             override fun windowClosing(e: WindowEvent?) {
                 context.close()
