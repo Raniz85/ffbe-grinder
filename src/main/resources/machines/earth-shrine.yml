@@ -1,0 +1,86 @@
+name: Earth Shrine
+description: Runs the Earth Shrine
+initialState: Earth Shrine Quest Selection
+states:
+    Earth Shrine Quest Selection:
+        actions:
+            - type: tap
+              locations: stageSelect2
+        transitions:
+            Missions Screen:
+                type: time
+                delay: PT2S
+    Missions Screen:
+        actions:
+            - type: tap
+              locations: missionsNext
+        transitions:
+            Companion Selection:
+                type: time
+                delay: PT2S
+    Companion Selection:
+        actions:
+            - type: tap
+              locations: companion0
+        transitions:
+            Party Selection:
+                type: time
+                delay: PT2S
+    Party Selection:
+        actions:
+            - type: tap
+              locations: depart
+        transitions:
+            Kill Monsters:
+                type: time
+                delay: PT5S
+    Party Selection:
+        actions:
+            - type: tap
+              locations: depart
+        transitions:
+            Kill Monsters:
+                type: time
+                delay: PT5S
+    Kill Monsters:
+        actions:
+            - type: tap
+              locations: [character1, character2]
+              repeat: true
+        transitions:
+            Results:
+                type: time
+                delay: PT35S
+    Results:
+        actions:
+            - type: tap
+              locations: [center, resultsNext]
+        transitions:
+            Results2:
+                type: time
+                delay: PT3S
+    Results2:
+        actions:
+            - type: tap
+              locations: [center, resultsNext]
+        transitions:
+            Item Results:
+                type: time
+                delay: PT3S
+    Item Results:
+        actions:
+            - type: tap
+              locations: [center, resultsNext]
+        transitions:
+            Friend Request:
+                type: time
+                delay: PT3S
+    Friend Request:
+        actions:
+            - type: tap
+              locations: dontRequestFriend
+        transitions:
+            Earth Shrine Quest Selection:
+                type: time
+                delay: PT5S
+

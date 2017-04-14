@@ -1,0 +1,21 @@
+- ratio: 0.5625 # 9:16
+  locations:
+    auto: 0.156, 0.957
+    center: 0.5, 0.5
+    character0: 0.25, 0.666
+    character1: 0.75, 0.666
+    character2: 0.25, 0.770
+    character3: 0.75, 0.770
+    character4: 0.25, 0.863
+    character5: 0.75, 0.863
+    companion0: 0.5, 0.346
+    companion1: 0.5, 0.5
+    companion2: 0.5, 0.631
+    companion3: 0.5, 0.785
+    companion4: 0.5, 0.934
+    depart: 0.5, 0.848
+    dontRequestFriend: 0.25, 0.732
+    missionsNext: 0.5, 0.871
+    resultsNext: 0.5, 0.879
+    stageSelect2: 0.5, 0.644
+

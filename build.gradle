@@ -53,6 +53,11 @@ dependencies {
 
     compile "com.miglayout:miglayout-swing"
 
+    compile "com.fasterxml.jackson.core:jackson-databind"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin"
+    compile "com.fasterxml.jackson.module:jackson-module-java8"
+
     testCompile "org.spockframework:spock-core"
     testCompile "org.spockframework:spock-spring"
     testCompile "org.springframework.boot:spring-boot-starter-test"
