@@ -67,4 +67,4 @@ fun readStateGraph(yml: String): State {
 
 data class StateGraph(val name: String, val description: String, val initialState: String, val states: Map<String, GraphState>)
 
-data class GraphState(val transitions: Map<String, TransitionTest>, val actions: List<GameAction>)
+data class GraphState(val transitions: Map<String, TransitionTest>, val actions: List<GameAction> = listOf())

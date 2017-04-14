@@ -2,13 +2,13 @@
  * Copyright (c) 2017, Daniel Raniz Raneland
  */
 
-package se.raneland.ffbe.service
+package se.raneland.ffbe.image
 
 import java.awt.image.BufferedImage
 
 const val DEFAULT_MAX_ERROR: Double = 0.05
 
-data class ImageRegion(val image: BufferedImage, val x: Int, val y: Int, val action: () -> Unit) {
+data class ImageRegion(val image: BufferedImage, val x: Int, val y: Int) {
 
     @JvmOverloads
     fun matches(target: BufferedImage, maxError: Double = DEFAULT_MAX_ERROR): Boolean {
@@ -39,12 +39,6 @@ data class ImageRegion(val image: BufferedImage, val x: Int, val y: Int, val act
                 argb.ushr(8).and(0xFF) / 255.0,
                 argb.and(0xFF) / 255.0
         )
-    }
-
-    fun  match(image: BufferedImage) {
-        if (matches(image)) {
-            action()
-        }
     }
 }
 

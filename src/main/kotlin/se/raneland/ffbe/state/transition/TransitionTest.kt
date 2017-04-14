@@ -14,7 +14,8 @@ import se.raneland.ffbe.state.GameState
  */
 @JsonTypeInfo(include = JsonTypeInfo.As.PROPERTY, use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes(
-        JsonSubTypes.Type(name = "time", value = TimedTransitionTest::class)
+        JsonSubTypes.Type(name = "time", value = TimedTransitionTest::class),
+        JsonSubTypes.Type(name = "imageRegion", value = ImageRegionTransitionTest::class)
 )
 interface TransitionTest {
 

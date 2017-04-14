@@ -1,0 +1,16 @@
+# Copyright 2017 Raniz
+
+# Gradle
+build/
+.gradle
+.gradletasknamecache
+
+# IDEA
+.idea/**
+!.idea/codeStyleSettings.xml
+!.idea/copyright/
+!.idea/copyright/**
+*.iml
+
+# Local files
+/application.yml

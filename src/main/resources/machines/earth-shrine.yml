@@ -1,15 +1,24 @@
 name: Earth Shrine
 description: Runs the Earth Shrine
-initialState: Earth Shrine Quest Selection
+initialState: Start
 states:
+    Start:
+        transitions:
+            Earth Shrine Quest Selection:
+                type: imageRegion
+                name: earth-shrine.png
+                x: 145
+                y: 263
     Earth Shrine Quest Selection:
         actions:
             - type: tap
               locations: stageSelect2
         transitions:
             Missions Screen:
-                type: time
-                delay: PT2S
+                type: imageRegion
+                name: missions.png
+                x: 223
+                y: 337
     Missions Screen:
         actions:
             - type: tap
@@ -32,16 +41,10 @@ states:
               locations: depart
         transitions:
             Kill Monsters:
-                type: time
-                delay: PT5S
-    Party Selection:
-        actions:
-            - type: tap
-              locations: depart
-        transitions:
-            Kill Monsters:
-                type: time
-                delay: PT5S
+                type: imageRegion
+                name: autoCombat.png
+                x: 5
+                y: 1197
     Kill Monsters:
         actions:
             - type: tap
@@ -49,17 +52,19 @@ states:
               repeat: true
         transitions:
             Results:
-                type: time
-                delay: PT35S
+                type: imageRegion
+                name: gilResults.png
+                x: 213
+                y: 500
     Results:
         actions:
             - type: tap
               locations: [center, resultsNext]
         transitions:
-            Results2:
+            UnitResults:
                 type: time
                 delay: PT3S
-    Results2:
+    UnitResults:
         actions:
             - type: tap
               locations: [center, resultsNext]
@@ -73,14 +78,23 @@ states:
               locations: [center, resultsNext]
         transitions:
             Friend Request:
-                type: time
-                delay: PT3S
+                type: imageRegion
+                name: friendRequest.png
+                x: 208
+                y: 359
+            Earth Shrine Quest Selection:
+                type: imageRegion
+                name: earth-shrine.png
+                x: 145
+                y: 263
     Friend Request:
         actions:
             - type: tap
               locations: dontRequestFriend
         transitions:
             Earth Shrine Quest Selection:
-                type: time
-                delay: PT5S
+                type: imageRegion
+                name: earth-shrine.png
+                x: 145
+                y: 263
 
