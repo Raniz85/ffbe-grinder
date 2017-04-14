@@ -4,7 +4,9 @@
 
 package se.raneland.ffbe.ui
 
+import ch.qos.logback.classic.Logger
 import net.miginfocom.swing.MigLayout
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.SpringApplication
 import org.springframework.context.ConfigurableApplicationContext
@@ -46,14 +48,17 @@ class MainWindow// Set up the UI
     val logScroll: JScrollPane
     val logView: JTextArea
 
+    var logAppender: TextViewAppender? = null
+
     init {
+        preferredSize = Dimension(1200, 850)
         addWindowListener(object: WindowAdapter() {
             override fun windowClosing(e: WindowEvent?) {
                 context.close()
                 System.exit(0)
             }
         })
-        layout = MigLayout("fill", "[grow 0][fill]", "[][][fill]")
+        layout = MigLayout("fill", "[grow 0, shrink 0][fill]", "[][][fill]")
         screenshot = ImagePanel()
         screenshot.preferredSize = Dimension(450, 800)
         screenshot.addMouseListener(object : MouseAdapter() {
@@ -89,13 +94,15 @@ class MainWindow// Set up the UI
             val initialState = readStateGraph(contents)
             val machine = StateMachine(deviceController, initialState)
             this.machine = machine
+            startLogging()
         }
         add(graphList, "cell 1 1")
 
         logView = JTextArea()
+        logView.lineWrap = true
         logScroll = JScrollPane(logView)
+        logScroll.horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         add(logScroll, "cell 1 2")
-
 
         pack()
         deviceController.addScreenshotListener {
@@ -103,6 +110,20 @@ class MainWindow// Set up the UI
             machine?.enqueue(it)
         }
         deviceController.collectScreenshots = true
+    }
+
+    private fun startLogging() {
+        val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as Logger
+
+        val runningAppender = logAppender
+        if (runningAppender != null) {
+            runningAppender.stop()
+            rootLogger.detachAppender(runningAppender)
+        }
+        val appender = TextViewAppender(logView)
+        rootLogger.addAppender(appender)
+        appender.start()
+        logAppender = appender
     }
 
     class Device(val device: JadbDevice) {

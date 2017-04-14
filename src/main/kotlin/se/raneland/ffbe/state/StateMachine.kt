@@ -56,7 +56,7 @@ class StateMachine(private val device: DeviceController, private val initialStat
         executor.stopExecuting()
 
         // Update the state
-        logger.info("Entering state ${state}")
+        logger.info("Entering state ${nextState.name}")
         state = nextState
         lastTransition = ZonedDateTime.now()
 

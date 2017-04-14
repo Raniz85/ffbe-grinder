@@ -13,6 +13,7 @@
     companion2: 0.5, 0.631
     companion3: 0.5, 0.785
     companion4: 0.5, 0.934
+    companionChangedOk: 0.5, 0.578
     depart: 0.5, 0.848
     dontRequestFriend: 0.25, 0.732
     missionsNext: 0.5, 0.871

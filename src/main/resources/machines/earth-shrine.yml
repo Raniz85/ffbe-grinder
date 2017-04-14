@@ -30,6 +30,14 @@ states:
     Companion Selection:
         actions:
             - type: tap
+              locations: companion3
+        transitions:
+            Party Selection:
+                type: time
+                delay: PT2S
+    Companion Selection 2:
+        actions:
+            - type: tap
               locations: companion0
         transitions:
             Party Selection:
@@ -40,11 +48,24 @@ states:
             - type: tap
               locations: depart
         transitions:
+            Companion Changed:
+                type: imageRegion
+                name: companionChanged.png
+                x: 106
+                y: 611
             Kill Monsters:
                 type: imageRegion
                 name: autoCombat.png
                 x: 5
                 y: 1197
+    Companion Changed:
+        actions:
+            - type: tap
+              locations: companionChangedOk
+        transitions:
+            Companion Selection 2:
+                type: time
+                delay: PT5S
     Kill Monsters:
         actions:
             - type: tap
