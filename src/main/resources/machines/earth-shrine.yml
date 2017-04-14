@@ -55,15 +55,8 @@ states:
     Companion Selection:
         actions:
             - type: tap
-              locations: companion3
-        transitions:
-            Party Selection:
-                type: time
-                delay: PT2S
-    Companion Selection 2:
-        actions:
-            - type: tap
-              locations: companion0
+              locations: [companion0, companion1, companion2, companion3, companion4]
+              strategy: random
         transitions:
             Party Selection:
                 type: time
@@ -88,13 +81,13 @@ states:
             - type: tap
               locations: companionChangedOk
         transitions:
-            Companion Selection 2:
+            Companion Selection:
                 type: time
-                delay: PT5S
+                delay: PT10S
     Kill Monsters:
         actions:
             - type: tap
-              locations: [character1, character2]
+              locations: [character0, character1]
               repeat: true
         transitions:
             Results:

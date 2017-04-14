@@ -40,7 +40,7 @@ private val bundledGraphs : Map<String, URL> = mapOf(
         "earth-shrine-no-lapis-refresh.yml" to getResource("/machines/earth-shrine-no-lapis-refresh.yml")
 )
 
-private fun getResource(path: String) = StateGraph::class.java.getResource(path)
+private fun getResource(path: String) = StringStateGraph::class.java.getResource(path)
 
 fun listAvailableGraphs(): Map<String, URL>  {
     val files : MutableMap<String, URL> = Files.walk(Paths.get("."))
@@ -54,8 +54,8 @@ fun listAvailableGraphs(): Map<String, URL>  {
  * @author Raniz
  * @since 2017-04-10.
  */
-fun readStateGraph(yml: String): State {
-    val graph = yamlMapper.readValue<StateGraph>(yml)
+fun readStateGraph(yml: String): StateGraph {
+    val graph = yamlMapper.readValue<StringStateGraph>(yml)
     val states = graph.states.mapValues { (name, gState) -> State(name, actions = gState.actions) }
     graph.states.forEach { (name, gState) ->
         val state = states[name]!!
@@ -63,9 +63,11 @@ fun readStateGraph(yml: String): State {
                 .map { (nextState, test) -> StateTransition(test, states[nextState]!!) }
                 .forEach { state.transitions.add(it) }
     }
-    return states[graph.initialState]!!
+    return StateGraph(graph.name, graph.description, states[graph.initialState]!!)
 }
 
-data class StateGraph(val name: String, val description: String, val initialState: String, val states: Map<String, GraphState>)
+data class StateGraph(val name: String, val description: String, val initialState: State)
 
-data class GraphState(val transitions: Map<String, TransitionTest>, val actions: List<GameAction> = listOf())
+data class StringStateGraph(val name: String, val description: String, val initialState: String, val states: Map<String, StringState>)
+
+data class StringState(val transitions: Map<String, TransitionTest>, val actions: List<GameAction> = listOf())
