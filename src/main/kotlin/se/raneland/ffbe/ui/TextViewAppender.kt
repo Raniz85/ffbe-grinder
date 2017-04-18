@@ -21,7 +21,10 @@ class TextViewAppender(val textArea: JTextArea) : AppenderBase<ILoggingEvent>() 
         if (event.level.levelInt < Level.INFO_INT) {
             return
         }
-        lines.add(event.message)
+        when (event.level.levelInt) {
+            Level.INFO_INT -> lines.add(event.message)
+            else -> lines.add("${event.level.levelStr}: ${event.message}")
+        }
         SwingUtilities.invokeLater {
             textArea.text = lines.joinToString("\n")
         }
