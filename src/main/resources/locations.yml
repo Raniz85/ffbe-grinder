@@ -8,6 +8,7 @@
     character3: 0.75, 0.770
     character4: 0.25, 0.863
     character5: 0.75, 0.863
+    closeDailyQuestButton: 0.25, 0.615
     companion0: 0.5, 0.346
     companion1: 0.5, 0.5
     companion2: 0.5, 0.631

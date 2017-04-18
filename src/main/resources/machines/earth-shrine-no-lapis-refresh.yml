@@ -96,6 +96,11 @@ states:
                 name: friendRequest.png
                 x: 208
                 y: 359
+            Daily Quest Completed:
+                type: imageRegion
+                name: dailyQuestCompleted.png
+                x: 207
+                y: 341
             Earth Shrine Quest Selection:
                 type: imageRegion
                 name: earth-shrine.png
@@ -105,6 +110,21 @@ states:
         actions:
             - type: tap
               locations: dontRequestFriend
+        transitions:
+            Daily Quest Completed:
+                type: imageRegion
+                name: dailyQuestCompleted.png
+                x: 207
+                y: 341
+            Earth Shrine Quest Selection:
+                type: imageRegion
+                name: earth-shrine.png
+                x: 145
+                y: 263
+    Daily Quest Completed:
+        actions:
+            - type: tap
+              locations: closeDailyQuestButton
         transitions:
             Earth Shrine Quest Selection:
                 type: imageRegion
