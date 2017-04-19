@@ -11,5 +11,5 @@ import se.raneland.ffbe.state.transition.StateTransition
  * @author Raniz
  * @since 2017-04-10.
  */
-data class State(val name: String, val transitions: MutableList<StateTransition> = mutableListOf(), val actions: List<GameAction> = mutableListOf())
+data class MachineState(val name: String, val transitions: MutableList<StateTransition> = mutableListOf(), val actions: List<GameAction> = mutableListOf())
 

@@ -17,14 +17,14 @@ import java.util.concurrent.LinkedBlockingDeque
 
 interface StateListener {
 
-    fun stateChanged(state: State, gameState: GameState)
+    fun stateChanged(state: MachineState, gameState: GameState)
 }
 
 /**
  * @author Raniz
  * @since 2017-01-14.
  */
-class StateMachine(private val device: DeviceController, private val initialState: State) {
+class StateMachine(private val device: DeviceController, private val initialState: MachineState) {
 
     companion object : KLogging()
 
@@ -51,7 +51,7 @@ class StateMachine(private val device: DeviceController, private val initialStat
 
     fun removeListener(listener: StateListener) = listeners.remove(listener)
 
-    private fun setState(nextState: State) {
+    private fun setState(nextState: MachineState) {
         // Stop the current state
         evaluator.stopEvaluating()
         executor.stopExecuting()

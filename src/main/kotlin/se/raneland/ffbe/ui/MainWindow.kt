@@ -12,17 +12,13 @@ import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.stereotype.Component
 import se.raneland.ffbe.service.DeviceController
 import se.raneland.ffbe.service.Point
-import se.raneland.ffbe.state.StateGraph
 import se.raneland.ffbe.state.StateMachine
-import se.raneland.ffbe.state.listAvailableGraphs
-import se.raneland.ffbe.state.readStateGraph
 import se.vidstige.jadb.JadbDevice
 import java.awt.Dimension
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import java.nio.charset.StandardCharsets
 import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JFrame
@@ -38,18 +34,14 @@ class MainWindow// Set up the UI
 @Autowired constructor(val deviceController: DeviceController, context: ConfigurableApplicationContext) : JFrame("Final Fantasy Brave Exvius Controller") {
 
     var machine: StateMachine? = null
-    val availableGraphs = listAvailableGraphs()
 
     // UI components
     val screenshot: ImagePanel
     val deviceList: JComboBox<Device>
-    val graphList: JComboBox<String>
     val logScroll: JScrollPane
     val logView: JTextArea
     val startButton: JButton
     val stopButton: JButton
-
-    var stateGraph: StateGraph? = null
 
     var logAppender: TextViewAppender? = null
 
@@ -71,7 +63,7 @@ class MainWindow// Set up the UI
                 deviceController.tap(Point(x, y))
             }
         })
-        add(screenshot, "cell 0 0 1 4")
+        add(screenshot, "cell 0 0 1 3")
 
         deviceList = JComboBox()
         deviceController.devices.forEach {
@@ -85,21 +77,6 @@ class MainWindow// Set up the UI
         }
         add(deviceList, "cell 1 0 2 1")
 
-        graphList = JComboBox()
-        availableGraphs.keys.forEach(graphList::addItem)
-        graphList.addActionListener {
-            val name = graphList.selectedItem
-            val url = availableGraphs[name]!!
-            val contents = url.openStream().use {
-                val size = it.available()
-                it.readBytes(size)
-            }.toString(StandardCharsets.UTF_8)
-            stateGraph = readStateGraph(contents)
-            startLogging()
-        }
-        add(graphList, "cell 1 1 2 1")
-
-
         startButton = JButton("Start")
         stopButton = JButton("stop")
         stopButton.isEnabled = false
@@ -109,13 +86,14 @@ class MainWindow// Set up the UI
             if (runningMachine != null) {
                 runningMachine.stop()
             }
+            val stateGraph = GraphSelector(this).select()
             this.machine = stateGraph?.let {
                 StateMachine(deviceController, it.initialState)
             }
             startButton.isEnabled = this.machine ==null
             stopButton.isEnabled = this.machine != null
         }
-        add(startButton, "cell 1 2")
+        add(startButton, "cell 1 1")
 
         stopButton.addActionListener {
             var runningMachine = machine
@@ -126,14 +104,14 @@ class MainWindow// Set up the UI
             startButton.isEnabled = true
             stopButton.isEnabled = false
         }
-        add(stopButton, "cell 2 2")
+        add(stopButton, "cell 2 1")
 
 
         logView = JTextArea()
         logView.lineWrap = true
         logScroll = JScrollPane(logView)
         logScroll.horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
-        add(logScroll, "cell 1 3 2 1")
+        add(logScroll, "cell 1 2 2 1")
 
         pack()
         deviceController.addScreenshotListener {
