@@ -18,15 +18,18 @@ class TextViewAppender(val textArea: JTextArea) : AppenderBase<ILoggingEvent>() 
     val lines = mutableListOf<String>()
 
     override fun append(event: ILoggingEvent) {
-        if (event.level.levelInt < Level.INFO_INT) {
-            return
-        }
-        when (event.level.levelInt) {
-            Level.INFO_INT -> lines.add(event.message)
-            else -> lines.add("${event.level.levelStr}: ${event.message}")
+        val text = synchronized(lines) {
+            if (event.level.levelInt < Level.INFO_INT) {
+                return
+            }
+            when (event.level.levelInt) {
+                Level.INFO_INT -> lines.add(event.message)
+                else -> lines.add("${event.level.levelStr}: ${event.message}")
+            }
+            lines.joinToString("\n")
         }
         SwingUtilities.invokeLater {
-            textArea.text = lines.joinToString("\n")
+            textArea.text = text
         }
     }
 
