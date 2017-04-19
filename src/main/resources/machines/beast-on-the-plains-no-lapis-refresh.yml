@@ -24,7 +24,15 @@ states:
                 name: refreshWithLapisButton.png
                 x: 394
                 y: 612
-    Wait For Lapis: {}
+    Wait For Lapis:
+        actions:
+            - type: tap
+              locations: dontRefreshWithLapis
+        transitions:
+            # Try again every 30 seconds
+            Snow Plains Quest Selection:
+                type: time
+                delay: PT30S
     Missions Screen:
         actions:
             - type: tap
