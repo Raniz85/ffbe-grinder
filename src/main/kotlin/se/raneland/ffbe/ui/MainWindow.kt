@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.stereotype.Component
 import se.raneland.ffbe.service.DeviceController
+import se.raneland.ffbe.service.Point
 import se.raneland.ffbe.state.StateGraph
 import se.raneland.ffbe.state.StateMachine
 import se.raneland.ffbe.state.listAvailableGraphs
@@ -67,7 +68,7 @@ class MainWindow// Set up the UI
             override fun mouseClicked(e: MouseEvent) {
                 val x = e.x / screenshot.width.toDouble()
                 val y = e.y / screenshot.height.toDouble()
-                deviceController.tap(x, y)
+                deviceController.tap(Point(x, y))
             }
         })
         add(screenshot, "cell 0 0 1 4")

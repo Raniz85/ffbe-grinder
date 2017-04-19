@@ -27,11 +27,7 @@ class TapAction(repeat: Boolean = false, val locations: List<String>, val strate
 
     override fun execute(controller: DeviceController) {
         when (strategy) {
-            TAP_STRATEGY.ALL -> {
-                locations.forEach {
-                    controller.tap(it)
-                }
-            }
+            TAP_STRATEGY.ALL -> controller.tap(*locations.toTypedArray())
             TAP_STRATEGY.RANDOM -> {
                 controller.tap(locations[random.nextInt(locations.size)])
             }

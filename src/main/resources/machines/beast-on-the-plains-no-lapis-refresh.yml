@@ -1,18 +1,18 @@
-name: Earth Shrine
-description: Runs the Earth Shrine
+name: Snow Plains
+description: Runs the Snow Plains
 initialState: Start
 states:
     Start:
         transitions:
-            Earth Shrine Quest Selection:
+            Snow Plains Quest Selection:
                 type: imageRegion
-                name: earth-shrine.png
-                x: 145
-                y: 263
-    Earth Shrine Quest Selection:
+                name: snow-plains.png
+                x: 90
+                y: 404
+    Snow Plains Quest Selection:
         actions:
             - type: tap
-              locations: stageSelect2
+              locations: stageSelect0
         transitions:
             Missions Screen:
                 type: imageRegion
@@ -52,7 +52,7 @@ states:
                 name: companionChanged.png
                 x: 106
                 y: 611
-            Kill Monsters:
+            Set Up Actions:
                 type: imageRegion
                 name: autoCombat.png
                 x: 5
@@ -65,10 +65,42 @@ states:
             Companion Selection:
                 type: time
                 delay: PT10S
-    Kill Monsters:
+    Set Up Actions:
+        actions:
+            # Chizuru, Phantom Shadow
+            - type: selectAbility
+              character: 0
+              ability: 16
+            # Ling, Dance of Death
+            - type: selectAbility
+              character: 1
+              ability: 14
+            # Lightning, Heat Blitz
+            - type: selectAbility
+              character: 2
+              ability: 11
+            # Minfilia, Assault Order
+            - type: selectAbility
+              character: 3
+              ability: 24
+              target: character3
+            # Emperor, Firaga (No Dualcast support yet)
+            - type: selectAbility
+              character: 4
+              ability: 2
+            # Turn on auto attack, this uses their currently selected abilities - this turn
+            - type: tap
+              locations: autoAttack
+            # Turn off auto attack again, so we can mash repeat instead
+            - type: tap
+              locations: autoAttack
+        transitions:
+            Repeat Actions:
+                type: allActionsExecuted
+    Repeat Actions:
         actions:
             - type: tap
-              locations: [character0, character1]
+              locations: repeatActions
               repeat: true
         transitions:
             Results:
@@ -107,11 +139,11 @@ states:
                 name: dailyQuestCompleted.png
                 x: 207
                 y: 341
-            Earth Shrine Quest Selection:
+            Snow Plains Quest Selection:
                 type: imageRegion
-                name: earth-shrine.png
-                x: 145
-                y: 263
+                name: snow-plains.png
+                x: 90
+                y: 404
     Friend Request:
         actions:
             - type: tap
@@ -122,19 +154,19 @@ states:
                 name: dailyQuestCompleted.png
                 x: 207
                 y: 341
-            Earth Shrine Quest Selection:
+            Snow Plains Quest Selection:
                 type: imageRegion
-                name: earth-shrine.png
-                x: 145
-                y: 263
+                name: snow-plains.png
+                x: 90
+                y: 404
     Daily Quest Completed:
         actions:
             - type: tap
               locations: closeDailyQuestButton
         transitions:
-            Earth Shrine Quest Selection:
+            Snow Plains Quest Selection:
                 type: imageRegion
-                name: earth-shrine.png
-                x: 145
-                y: 263
+                name: snow-plains.png
+                x: 90
+                y: 404
 

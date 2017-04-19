@@ -112,19 +112,60 @@ class DeviceController {
         devices.addAll(adb.devices)
     }
 
-    fun tap(x: Double, y: Double) {
-        val realX = (x * size.width).toInt()
-        val realY = (y * size.height).toInt()
-        input("tap", realX, realY)
+    fun tap(vararg locs: String) {
+        val points = locs.map { location ->
+            locations[location] ?: error("No location named ${location} exists")
+        }
+        tap(*points.toTypedArray())
     }
 
-    fun tap(location: String) {
-        val point = locations[location] ?: error("No location named ${location} exists")
-        tap(point)
+    fun tap(vararg points: Point) {
+        when (points.size) {
+            0 -> return
+            1 -> tap(points[0])
+            else -> {
+                val args = mutableListOf<Any>()
+                points.forEach { point ->
+                    val realX = (point.x * size.width).toInt()
+                    val realY = (point.y * size.height).toInt()
+                    if (args.isNotEmpty()) {
+                        args.add("&&")
+                    }
+                    args.add("input")
+                    args.add("tap")
+                    args.add(realX)
+                    args.add(realY)
+                }
+                shell("sh", "-c", args.joinToString(" "))
+            }
+        }
     }
 
     fun tap(point: Point) {
-        tap(point.x, point.y)
+        val realX = (point.x * size.width).toInt()
+        val realY = (point.y * size.height).toInt()
+        input("tap", realX, realY)
+    }
+
+    fun  drag(location: String, dx: Double, dy: Double, ms: Int? = null) {
+        val point = locations[location] ?: error("No location named ${location} exists")
+        drag(point, dx, dy, ms)
+    }
+
+    fun  drag(point: Point, dx: Double, dy: Double, ms: Int? = null) {
+        drag(point.x, point.y, dx, dy, ms)
+    }
+
+    fun  drag(x: Double, y: Double, dx: Double, dy: Double, ms: Int? = null) {
+        val realX1 = (x * size.width).toInt()
+        val realY1 = (y * size.height).toInt()
+        val realX2 = ((x + dx) * size.width).toInt()
+        val realY2 = ((y + dy) * size.height).toInt()
+        if (ms != null) {
+            input("swipe", realX1, realY1, realX2, realY2, ms)
+        } else {
+            input("swipe", realX1, realY1, realX2, realY2)
+        }
     }
 
     fun input(vararg args: Any) {

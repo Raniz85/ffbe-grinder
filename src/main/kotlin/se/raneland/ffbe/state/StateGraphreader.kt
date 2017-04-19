@@ -37,7 +37,8 @@ private val yamlMapper = ObjectMapper(YAMLFactory()).apply {
 
 private val bundledGraphs : Map<String, URL> = mapOf(
         "earth-shrine.yml" to getResource("/machines/earth-shrine.yml"),
-        "earth-shrine-no-lapis-refresh.yml" to getResource("/machines/earth-shrine-no-lapis-refresh.yml")
+        "earth-shrine-no-lapis-refresh.yml" to getResource("/machines/earth-shrine-no-lapis-refresh.yml"),
+        "beast-on-the-plains-no-lapis-refresh.yml" to getResource("/machines/beast-on-the-plains-no-lapis-refresh.yml")
 )
 
 private fun getResource(path: String) = StringStateGraph::class.java.getResource(path)
@@ -60,7 +61,7 @@ fun readStateGraph(yml: String): StateGraph {
     graph.states.forEach { (name, gState) ->
         val state = states[name]!!
         gState.transitions
-                .map { (nextState, test) -> StateTransition(test, states[nextState]!!) }
+                .map { (nextState, test) -> StateTransition(test, states[nextState] ?: error("State ${nextState} not found")) }
                 .forEach { state.transitions.add(it) }
     }
     return StateGraph(graph.name, graph.description, states[graph.initialState]!!)
@@ -70,4 +71,4 @@ data class StateGraph(val name: String, val description: String, val initialStat
 
 data class StringStateGraph(val name: String, val description: String, val initialState: String, val states: Map<String, StringState>)
 
-data class StringState(val transitions: Map<String, TransitionTest>, val actions: List<GameAction> = listOf())
+data class StringState(val transitions: Map<String, TransitionTest> = mapOf(), val actions: List<GameAction> = listOf())

@@ -11,6 +11,7 @@ import se.raneland.ffbe.state.transition.StateTransition
 import java.awt.image.BufferedImage
 import java.time.Duration
 import java.time.ZonedDateTime
+import java.util.NoSuchElementException
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.LinkedBlockingDeque
 
@@ -59,6 +60,9 @@ class StateMachine(private val device: DeviceController, private val initialStat
         logger.info("Entering state ${nextState.name}")
         state = nextState
         lastTransition = ZonedDateTime.now()
+        if (state.transitions.isEmpty()) {
+            logger.warn("Entered state with no transitions")
+        }
 
         // Start the threads again
         evaluator = TransitionEvaluator(state.transitions)
@@ -99,7 +103,7 @@ class StateMachine(private val device: DeviceController, private val initialStat
                 while (run) {
                     val screen = queue.take()
                     val now = ZonedDateTime.now()
-                    val gameState = GameState(screen, Duration.between(lastTransition, now))
+                    val gameState = GameState(screen, Duration.between(lastTransition, now), executor.actionQueue.toList())
                     logger.trace("Game state : ${gameState}")
                     val nextState = transitions.firstOrNull {
                         logger.trace("Testing transition ${it}")
@@ -115,9 +119,11 @@ class StateMachine(private val device: DeviceController, private val initialStat
         }
     }
 
-    private inner class ActionExecutor(val actions: List<GameAction>): Thread("action-executor") {
+    private inner class ActionExecutor(actions: List<GameAction>): Thread("action-executor") {
 
         private @Volatile var run = true
+
+        val actionQueue = LinkedBlockingDeque(actions)
 
         fun stopExecuting() {
             run = false
@@ -126,19 +132,19 @@ class StateMachine(private val device: DeviceController, private val initialStat
 
         override fun run() {
             try {
-                actions.forEach {
-                    logger.info("Executing action ${it}")
-                    it.execute(device)
-                }
-                val repeatActions = actions.filter(GameAction::repeat)
-                while (run && repeatActions.isNotEmpty()) {
-                    repeatActions.forEach {
-                        logger.info("Executing action ${it}")
-                        it.execute(device)
+                while (actionQueue.isNotEmpty() && run) {
+                    val action = actionQueue.peek()
+                    logger.info("Executing action ${action}")
+                    action.execute(device)
+                    if (action.repeat()) {
+                        actionQueue.addLast(action)
                     }
+                    actionQueue.removeFirst()
                 }
             } catch (e: InterruptedException) {
                 // Do nothing
+            } catch(e: NoSuchElementException) {
+
             }
         }
     }
