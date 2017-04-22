@@ -4,15 +4,15 @@ initialState: Start
 states:
     Start:
         transitions:
-            Snow Plains Quest Selection:
+            Vortex Quest Selection:
                 type: imageRegion
-                name: snow-plains.png
-                x: 90
-                y: 404
-    Snow Plains Quest Selection:
+                name: vortex-quest-0.png
+                x: 31
+                y: 426
+    Vortex Quest Selection:
         actions:
             - type: tap
-              locations: stageSelect0
+              locations: stageSelect1
         transitions:
             Missions Screen:
                 type: imageRegion
@@ -30,7 +30,7 @@ states:
               locations: dontRefreshWithLapis
         transitions:
             # Try again every 30 seconds
-            Snow Plains Quest Selection:
+            Vortex Quest Selection:
                 type: time
                 delay: PT30S
     Missions Screen:
@@ -75,27 +75,26 @@ states:
                 delay: PT10S
     Set Up Actions:
         actions:
-            # Chizuru, Phantom Shadow
+            # Kefka, Hyperdrive
             - type: selectAbility
               character: 0
-              ability: 16
-            # Ling, Dance of Death
+              ability: 21
+            # Terra, Firaga
             - type: selectAbility
               character: 1
-              ability: 14
-            # Lightning, Heat Blitz
+              ability: 10
+            # Lightning, Crushing Blow
             - type: selectAbility
               character: 2
-              ability: 11
-            # Minfilia, Assault Order
+              ability: 13
+            # Kefka, Deprotect
             - type: selectAbility
               character: 3
-              ability: 24
-              target: character3
-            # Emperor, Firaga (No Dualcast support yet)
+              ability: 5
+            # Kefka, Last Footstep
             - type: selectAbility
               character: 4
-              ability: 2
+              ability: 25
             # Turn on auto attack, this uses their currently selected abilities - this turn
             - type: tap
               locations: autoAttack
@@ -147,11 +146,11 @@ states:
                 name: dailyQuestCompleted.png
                 x: 207
                 y: 341
-            Snow Plains Quest Selection:
+            Vortex Quest Selection:
                 type: imageRegion
-                name: snow-plains.png
-                x: 90
-                y: 404
+                name: vortex-quest-0.png
+                x: 31
+                y: 426
     Friend Request:
         actions:
             - type: tap
@@ -162,19 +161,18 @@ states:
                 name: dailyQuestCompleted.png
                 x: 207
                 y: 341
-            Snow Plains Quest Selection:
+            Vortex Quest Selection:
                 type: imageRegion
-                name: snow-plains.png
-                x: 90
-                y: 404
+                name: vortex-quest-0.png
+                x: 31
+                y: 426
     Daily Quest Completed:
         actions:
             - type: tap
               locations: closeDailyQuestButton
         transitions:
-            Snow Plains Quest Selection:
+            Vortex Quest Selection:
                 type: imageRegion
-                name: snow-plains.png
-                x: 90
-                y: 404
-
+                name: vortex-quest-0.png
+                x: 31
+                y: 426

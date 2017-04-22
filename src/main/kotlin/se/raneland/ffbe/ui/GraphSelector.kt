@@ -31,7 +31,7 @@ import javax.swing.JTextArea
 val DESCRIPTIONS = listOf(
         GraphDescription("Earth Shrine", "Runs the Earth Shrine over and over, uses lapis to refresh when out of NRG", "/machines/earth-shrine.yml"),
         GraphDescription("Earth Shrine (no lapis)", "Runs the Earth Shrine over and over, waits for energy to recover over time", "/machines/earth-shrine-no-lapis-refresh.yml"),
-        GraphDescription("Beast on the Plains (no lapis)", "Runs the Snow Plains - Beast on the Plains over and over, waits for energy to recover over time", "/machines/beast-on-the-plains-no-lapis-refresh.yml")
+        GraphDescription("Floating Continent - PRO (no lapis)", "Runs the Floating Continent - PRO over and over, waits for energy to recover over time", "/machines/the-floating-continent-pr.yml")
 )
 
 
