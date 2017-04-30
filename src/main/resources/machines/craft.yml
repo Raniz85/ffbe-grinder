@@ -1,0 +1,166 @@
+name: Craft First ATK Item
+description: Crafts the first item on the ATK tab over and over again in up to 4 slots
+initialState: Crafting Select
+states:
+    Crafting Select:
+        transitions:
+            Craft Slot 1:
+                type: imageRegion
+                name: craftingSlotEmpty.png
+                x: 46
+                y: 513
+            Craft Slot 2:
+                type: imageRegion
+                name: craftingSlotEmpty.png
+                x: 46
+                y: 693
+            Craft Slot 3:
+                type: imageRegion
+                name: craftingSlotEmpty.png
+                x: 46
+                y: 873
+            Craft Slot 4:
+                type: imageRegion
+                name: craftingSlotEmpty.png
+                x: 46
+                y: 1053
+            Collect Slot 1:
+                type: imageRegion
+                name: craftingSlotComplete.png
+                x: 35
+                y: 512
+            Collect Slot 2:
+                type: imageRegion
+                name: craftingSlotComplete.png
+                x: 35
+                y: 692
+            Collect Slot 3:
+                type: imageRegion
+                name: craftingSlotComplete.png
+                x: 35
+                y: 872
+            Collect Slot 4:
+                type: imageRegion
+                name: craftingSlotComplete.png
+                x: 35
+                y: 1052
+    Craft Slot 1:
+        actions:
+            - type: tap
+              locations: craftingSlot0
+        transitions:
+            Select Tab:
+                type: time
+                delay: PT2S
+    Craft Slot 2:
+        actions:
+            - type: tap
+              locations: craftingSlot1
+        transitions:
+            Select Tab:
+                type: time
+                delay: PT2S
+    Craft Slot 3:
+        actions:
+            - type: tap
+              locations: craftingSlot2
+        transitions:
+            Select Tab:
+                type: time
+                delay: PT2S
+    Craft Slot 4:
+        actions:
+            - type: tap
+              locations: craftingSlot3
+        transitions:
+            Select Tab:
+                type: time
+                delay: PT3S
+    Select Tab:
+        actions:
+            - type: tap
+              locations: craftRecoveryTab
+        transitions:
+            Craft Item:
+                type: time
+                delay: PT1S
+    Craft Item:
+        actions:
+            - type: tap
+              locations: craftingItem0
+        transitions:
+            Start Crafting:
+                type: time
+                delay: PT1S
+    Start Crafting:
+        actions:
+            - type: tap
+              locations: startCraftingButton
+        transitions:
+            Confirm Crafting:
+                type: time
+                delay: PT1S
+    Confirm Crafting:
+        actions:
+            - type: tap
+              locations: confirmCraftingButton
+        transitions:
+            Crafting Select:
+                type: time
+                delay: PT1S
+    Collect Slot 1:
+        actions:
+            - type: tap
+              locations: craftingSlot0
+        transitions:
+            Collect Crafted Item:
+                type: imageRegion
+                name: collectCraftingOkButton.png
+                x: 326
+                y: 848
+    Collect Slot 2:
+        actions:
+            - type: tap
+              locations: craftingSlot1
+        transitions:
+            Collect Crafted Item:
+                type: imageRegion
+                name: collectCraftingOkButton.png
+                x: 326
+                y: 848
+    Collect Slot 3:
+        actions:
+            - type: tap
+              locations: craftingSlot2
+        transitions:
+            Collect Crafted Item:
+                type: imageRegion
+                name: collectCraftingOkButton.png
+                x: 326
+                y: 848
+    Collect Slot 4:
+        actions:
+            - type: tap
+              locations: craftingSlot3
+        transitions:
+            Collect Crafted Item:
+                type: imageRegion
+                name: collectCraftingOkButton.png
+                x: 326
+                y: 848
+    Collect Crafted Item:
+        actions:
+            - type: tap
+              locations: collectCraftingOkButton
+        transitions:
+            Crafting Select:
+                type: time
+                delay: PT1S
+    Daily Quest Completed:
+        actions:
+            - type: tap
+              locations: closeDailyQuestButton
+        transitions:
+            Crafting Select:
+                type: time
+                delay: PT1S
