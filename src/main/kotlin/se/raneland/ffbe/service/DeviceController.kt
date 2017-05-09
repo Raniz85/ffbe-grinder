@@ -63,6 +63,7 @@ class DeviceController {
             startCollecting()
             setLocations()
         }
+        logger.debug("Switched to device ${value} with screen size ${size.width}x${size.height}")
     }
 
     @Volatile var collectScreenshots: Boolean = false
