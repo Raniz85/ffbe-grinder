@@ -4,11 +4,14 @@
 
 package se.raneland.ffbe.image
 
+import mu.KLogging
 import java.awt.image.BufferedImage
 
 const val DEFAULT_MAX_ERROR: Double = 0.05
 
 data class ImageRegion(val image: BufferedImage, val x: Int, val y: Int) {
+
+    companion object: KLogging()
 
     @JvmOverloads
     fun matches(target: BufferedImage, maxError: Double = DEFAULT_MAX_ERROR): Boolean {
@@ -26,6 +29,7 @@ data class ImageRegion(val image: BufferedImage, val x: Int, val y: Int) {
             val (ba, br, bg, bb) = unpack(b)
             (Math.abs(ar - br) + Math.abs(ag - bg) + Math.abs(ab - bb)) / 3.0
         } .sumByDouble { it } / rgbA.size
+        logger.trace("Average error: ${averageError}")
         return averageError < maxError
     }
 

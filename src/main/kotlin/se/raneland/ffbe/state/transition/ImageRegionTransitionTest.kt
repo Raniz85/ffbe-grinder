@@ -4,6 +4,7 @@
 
 package se.raneland.ffbe.state.transition
 
+import mu.KLogging
 import se.raneland.ffbe.image.ImageRegion
 import se.raneland.ffbe.state.GameState
 import java.nio.file.Files
@@ -16,9 +17,14 @@ import javax.imageio.ImageIO
  */
 class ImageRegionTransitionTest : TransitionTest {
 
+    companion object : KLogging()
+
     val region: ImageRegion
 
+    val name: String
+
     constructor(name: String, x: Int, y: Int) {
+        this.name = name
         val path = Paths.get(name).takeIf { Files.exists(it) }
         val image = if (path != null) {
             ImageIO.read(path.toUri().toURL())
@@ -32,6 +38,7 @@ class ImageRegionTransitionTest : TransitionTest {
     }
 
     override fun matches(gameState: GameState): Boolean {
+        logger.trace("Testing image region ${name}@(${region.x},${region.y}) against game state")
         return region.matches(gameState.screen)
     }
 
