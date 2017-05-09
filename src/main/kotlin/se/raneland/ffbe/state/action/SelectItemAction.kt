@@ -11,7 +11,7 @@ import se.raneland.ffbe.service.DeviceController
  * @author Raniz
  * @since 2017-04-19.
  */
-class SelectAbilityAction(val character: Int, val ability: Int, val target: String? = null) : AbstractGameAction(false) {
+class SelectItemAction(val character: Int, val item: Int, val target: String? = null) : AbstractGameAction(false) {
 
     companion object : KLogging() {
         const val ABILITY_ROW_HEIGHT = 0.0918
@@ -19,11 +19,11 @@ class SelectAbilityAction(val character: Int, val ability: Int, val target: Stri
     }
 
     override fun execute(controller: DeviceController) {
-        // Enter ability selection
-        logger.info("Entering ability selection at character${character}")
-        controller.drag("character${character}", 0.25, 0.0)
+        // Enter item selection
+        logger.info("Entering item selection at character${character}")
+        controller.drag("character${character}", -0.25, 0.0)
 
-        val row = ability / 2
+        val row = item / 2
         var scroll = row - 2
 
         // Scroll so the ability is on the third row
@@ -35,7 +35,7 @@ class SelectAbilityAction(val character: Int, val ability: Int, val target: Stri
         }
 
         // Select the ability, if scroll is negative we will select from the first or second row, otherwise on the third
-        if (ability % 2 == 1) {
+        if (item % 2 == 1) {
             // Odd
             logger.info("Tapping at character${5 + Math.min(0, scroll * 2)}")
             controller.tap("character${5 + Math.min(0, scroll * 2)}")
@@ -45,12 +45,11 @@ class SelectAbilityAction(val character: Int, val ability: Int, val target: Stri
             controller.tap("character${4 + Math.min(0, scroll * 2)}")
         }
         if (target != null) {
-            logger.info("Selecting ${target} as ability target")
+            logger.info("Selecting ${target} as item target")
             controller.tap(target)
         }
 
     }
 
-    override fun toString() = "Select ability ${ability} of character ${character}"
+    override fun toString() = "Select item ${item} for character ${character}"
 }
-
