@@ -98,23 +98,8 @@ states:
     Results:
         actions:
             - type: tap
-              locations: [center, resultsNext]
-        transitions:
-            UnitResults:
-                type: time
-                delay: PT3S
-    UnitResults:
-        actions:
-            - type: tap
-              locations: [center, resultsNext]
-        transitions:
-            Item Results:
-                type: time
-                delay: PT3S
-    Item Results:
-        actions:
-            - type: tap
-              locations: [center, resultsNext]
+              locations: resultsNext
+              repeat: true
         transitions:
             Friend Request:
                 type: imageRegion
