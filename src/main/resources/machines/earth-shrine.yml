@@ -118,6 +118,8 @@ states:
                 y: 263
     Friend Request:
         actions:
+            - type: delay
+              delay: PT0.5S
             - type: tap
               locations: dontRequestFriend
         transitions:

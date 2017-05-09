@@ -14,6 +14,7 @@ import se.raneland.ffbe.service.DeviceController
  */
 @JsonTypeInfo(include = JsonTypeInfo.As.PROPERTY, use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes(
+        JsonSubTypes.Type(name = "delay", value = DelayAction::class),
         JsonSubTypes.Type(name = "tap", value = TapAction::class),
         JsonSubTypes.Type(name = "selectAbility", value = SelectAbilityAction::class),
         JsonSubTypes.Type(name = "selectItem", value = SelectItemAction::class)
