@@ -1,5 +1,5 @@
-name: Craft First ATK Item
-description: Crafts the first item on the ATK tab over and over again in up to 4 slots
+name: Craft First Recovery Item
+description: Crafts the first item on the Recovery tab over and over again in up to 4 slots, will stall when out of materials
 initialState: Crafting Select
 states:
     Crafting Select:
@@ -155,7 +155,7 @@ states:
         transitions:
             Crafting Select:
                 type: time
-                delay: PT1S
+                delay: PT2S
     Daily Quest Completed:
         actions:
             - type: tap
@@ -163,4 +163,4 @@ states:
         transitions:
             Crafting Select:
                 type: time
-                delay: PT1S
+                delay: PT2S
