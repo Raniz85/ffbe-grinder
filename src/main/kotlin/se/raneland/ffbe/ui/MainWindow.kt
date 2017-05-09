@@ -96,6 +96,7 @@ class MainWindow// Set up the UI
                 }
                 val stateGraph = GraphSelector(this).select()
                 this.machine = stateGraph?.let {
+                    startLogging()
                     StateMachine(deviceController, it.initialState)
                 }
                 startButton.isEnabled = this.machine == null
@@ -134,6 +135,7 @@ class MainWindow// Set up the UI
         if (deviceController.devices.size > 0) {
             deviceList.selectedIndex = 0
         }
+
     }
 
     private fun startLogging() {
