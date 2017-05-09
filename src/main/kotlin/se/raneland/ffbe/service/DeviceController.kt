@@ -11,6 +11,7 @@ import mu.KLogging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import se.vidstige.jadb.JadbConnection
+import se.vidstige.jadb.JadbDevice
 import java.awt.Dimension
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
@@ -54,7 +55,7 @@ class DeviceController {
 
     @Volatile var collector: ScreenshotCollector? = null
 
-    @Volatile var currentDevice = if (!devices.isEmpty()) devices[0] else null
+    @Volatile var currentDevice: JadbDevice? = null
     set(value) {
         field = value
         if (value == null) {
@@ -63,7 +64,7 @@ class DeviceController {
             startCollecting()
             setLocations()
         }
-        logger.debug("Switched to device ${value} with screen size ${size.width}x${size.height}")
+        logger.debug("Switched to ${value} and screen size ${size.width}x${size.height}")
     }
 
     @Volatile var collectScreenshots: Boolean = false
@@ -83,9 +84,13 @@ class DeviceController {
 
     private var locations: Map<String, Point> = LOCATIONS[0].locations
 
+    init {
+        currentDevice = if (!devices.isEmpty()) devices[0] else null
+    }
+
     private fun setLocations() {
         val info = shell("wm", "size")
-        val matcher = SCREEN_SIZE_REGEX.matcher(info).takeIf(Matcher::matches) ?: error("Could not determine screen size")
+        val matcher = SCREEN_SIZE_REGEX.matcher(info.trim()).takeIf(Matcher::matches) ?: error("Could not determine screen size")
         val width = matcher.group("width").toInt()
         val height = matcher.group("height").toInt()
         this.size = Dimension(width, height)
