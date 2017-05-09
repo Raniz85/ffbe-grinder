@@ -84,10 +84,6 @@ class DeviceController {
 
     private var locations: Map<String, Point> = LOCATIONS[0].locations
 
-    init {
-        currentDevice = if (!devices.isEmpty()) devices[0] else null
-    }
-
     private fun setLocations() {
         val info = shell("wm", "size")
         val matcher = SCREEN_SIZE_REGEX.matcher(info.trim()).takeIf(Matcher::matches) ?: error("Could not determine screen size")
@@ -204,6 +200,7 @@ class DeviceController {
         val device = currentDevice ?: return
         val collector = this.collector
         if (collector == null || !collector.run) {
+            logger.trace("Starting collector on ${device}")
             this.collector = ScreenshotCollector(device, adbLocation, ffmpegLocation) { image ->
                 screenshotListeners.forEach { it(image) }
             }

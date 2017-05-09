@@ -19,6 +19,7 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.util.concurrent.Executors
 import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JFrame
@@ -45,6 +46,8 @@ class MainWindow// Set up the UI
 
     var logAppender: TextViewAppender? = null
 
+    val actionExecutor = Executors.newSingleThreadExecutor()
+
     init {
         preferredSize = Dimension(900, 850)
         addWindowListener(object: WindowAdapter() {
@@ -60,7 +63,9 @@ class MainWindow// Set up the UI
             override fun mouseClicked(e: MouseEvent) {
                 val x = e.x / screenshot.width.toDouble()
                 val y = e.y / screenshot.height.toDouble()
-                deviceController.tap(Point(x, y))
+                actionExecutor.submit {
+                    deviceController.tap(Point(x, y))
+                }
             }
         })
         add(screenshot, "cell 0 0 1 3")
@@ -72,7 +77,9 @@ class MainWindow// Set up the UI
         deviceList.addActionListener {
             val item = deviceList.selectedItem
             if (item is Device) {
-                deviceController.currentDevice = item.device
+                actionExecutor.submit {
+                    deviceController.currentDevice = item.device
+                }
             }
         }
         add(deviceList, "cell 1 0 2 1")
@@ -82,27 +89,31 @@ class MainWindow// Set up the UI
         stopButton.isEnabled = false
 
         startButton.addActionListener {
-            var runningMachine = machine
-            if (runningMachine != null) {
-                runningMachine.stop()
+            actionExecutor.submit {
+                var runningMachine = machine
+                if (runningMachine != null) {
+                    runningMachine.stop()
+                }
+                val stateGraph = GraphSelector(this).select()
+                this.machine = stateGraph?.let {
+                    StateMachine(deviceController, it.initialState)
+                }
+                startButton.isEnabled = this.machine == null
+                stopButton.isEnabled = this.machine != null
             }
-            val stateGraph = GraphSelector(this).select()
-            this.machine = stateGraph?.let {
-                StateMachine(deviceController, it.initialState)
-            }
-            startButton.isEnabled = this.machine ==null
-            stopButton.isEnabled = this.machine != null
         }
         add(startButton, "cell 1 1")
 
         stopButton.addActionListener {
-            var runningMachine = machine
-            if (runningMachine != null) {
-                runningMachine.stop()
+            actionExecutor.submit {
+                var runningMachine = machine
+                if (runningMachine != null) {
+                    runningMachine.stop()
+                }
+                this.machine = null
+                startButton.isEnabled = true
+                stopButton.isEnabled = false
             }
-            this.machine = null
-            startButton.isEnabled = true
-            stopButton.isEnabled = false
         }
         add(stopButton, "cell 2 1")
 
@@ -119,6 +130,10 @@ class MainWindow// Set up the UI
             machine?.enqueue(it)
         }
         deviceController.collectScreenshots = true
+
+        if (deviceController.devices.size > 0) {
+            deviceList.selectedIndex = 0
+        }
     }
 
     private fun startLogging() {
