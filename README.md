@@ -21,6 +21,8 @@ ffmpeg:
     location: /path/to/ffmpeg
 ```
 
+If adb is on the path, you don't need to include it's location and vice versa for ffmpeg.
+
 # Running
 Run the app by executing `./gradlew bootRun`.
 
