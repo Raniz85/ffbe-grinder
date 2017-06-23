@@ -7,7 +7,7 @@ package se.raneland.ffbe.image
 import mu.KLogging
 import java.awt.image.BufferedImage
 
-const val DEFAULT_MAX_ERROR: Double = 0.05
+const val DEFAULT_MAX_ERROR: Double = 0.09
 
 data class ImageRegion(val image: BufferedImage, val x: Int, val y: Int) {
 

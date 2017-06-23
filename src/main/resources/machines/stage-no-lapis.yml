@@ -1,49 +1,38 @@
-name: Earth Shrine
-description: Runs the Earth Shrine
+name: Stage Grinding (No Lapis Refresh)
+description: Runs the second quest of any stage over and over again, waiting for NRG to generate
 initialState: Start
 states:
     Start:
         transitions:
-            Earth Shrine Quest Selection:
+            Quest Selection:
                 type: imageRegion
-                name: earth-shrine.png
-                x: 145
-                y: 263
-    Earth Shrine Quest Selection:
+                name: questSelection.png
+                x: 664
+                y: 554
+    Quest Selection:
         actions:
             - type: tap
-              locations: stageSelect2
+              locations: stageSelect1
         transitions:
             Missions Screen:
                 type: imageRegion
                 name: missions.png
                 x: 223
                 y: 337
-            Refresh NRG with Lapis:
+            Wait For Lapis:
                 type: imageRegion
                 name: refreshWithLapisButton.png
                 x: 394
                 y: 612
-    Refresh NRG with Lapis:
+    Wait For Lapis:
         actions:
             - type: tap
-              locations: refreshWithLapis
+              locations: dontRefreshWithLapis
         transitions:
-            Confirm Refresh with Lapis:
-                type: imageRegion
-                name: yesRefreshWithLapisButton.png
-                x: 396
-                y: 666
-    Confirm Refresh with Lapis:
-        actions:
-            - type: tap
-              locations: confirmRefreshWithLapis
-        transitions:
-            Missions Screen:
-                type: imageRegion
-                name: missions.png
-                x: 223
-                y: 337
+            # Try again every 30 seconds
+            Quest Selection:
+                type: time
+                delay: PT30S
     Missions Screen:
         actions:
             - type: tap
@@ -71,7 +60,7 @@ states:
                 name: companionChanged.png
                 x: 106
                 y: 611
-            Kill Monsters:
+            First Attack:
                 type: imageRegion
                 name: autoCombat.png
                 x: 5
@@ -84,10 +73,17 @@ states:
             Companion Selection:
                 type: time
                 delay: PT10S
-    Kill Monsters:
+    First Attack:
         actions:
             - type: tap
-              locations: [character0, character1]
+              locations: [character0, character1, character2, character3, character4]
+        transitions:
+            Repeat Actions:
+                type: allActionsExecuted
+    Repeat Actions:
+        actions:
+            - type: tap
+              locations: repeatActions
               repeat: true
         transitions:
             Results:
@@ -98,8 +94,23 @@ states:
     Results:
         actions:
             - type: tap
-              locations: resultsNext
-              repeat: true
+              locations: [center, resultsNext]
+        transitions:
+            UnitResults:
+                type: time
+                delay: PT3S
+    UnitResults:
+        actions:
+            - type: tap
+              locations: [center, resultsNext]
+        transitions:
+            Item Results:
+                type: time
+                delay: PT3S
+    Item Results:
+        actions:
+            - type: tap
+              locations: [center, resultsNext]
         transitions:
             Friend Request:
                 type: imageRegion
@@ -111,15 +122,13 @@ states:
                 name: dailyQuestCompleted.png
                 x: 207
                 y: 341
-            Earth Shrine Quest Selection:
+            Quest Selection:
                 type: imageRegion
-                name: earth-shrine.png
-                x: 145
-                y: 263
+                name: questSelection.png
+                x: 664
+                y: 554
     Friend Request:
         actions:
-            - type: delay
-              delay: PT0.5S
             - type: tap
               locations: dontRequestFriend
         transitions:
@@ -128,19 +137,19 @@ states:
                 name: dailyQuestCompleted.png
                 x: 207
                 y: 341
-            Earth Shrine Quest Selection:
+            Quest Selection:
                 type: imageRegion
-                name: earth-shrine.png
-                x: 145
-                y: 263
+                name: questSelection.png
+                x: 664
+                y: 554
     Daily Quest Completed:
         actions:
             - type: tap
               locations: closeDailyQuestButton
         transitions:
-            Earth Shrine Quest Selection:
+            Quest Selection:
                 type: imageRegion
-                name: earth-shrine.png
-                x: 145
-                y: 263
+                name: questSelection.png
+                x: 664
+                y: 554
 
