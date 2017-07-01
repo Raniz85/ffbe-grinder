@@ -38,7 +38,11 @@ val DESCRIPTIONS = listOf(
                 Runs the second quest of any stage over and over again, waiting for NRG to recover.
                 Navigate to any vortex or world stage and the script will repeatedly run the second stage.
                 """.trimIndent(),
-                "/machines/stage-no-lapis.yml")
+                "/machines/stage-no-lapis.yml"),
+        GraphDescription("Raid Summon", """
+                Performs Multi-Summon for raid coins over and over again
+                """.trimIndent(),
+                "/machines/raid-summon.yml")
 )
 
 

@@ -17,7 +17,9 @@
     companion4: 0.5, 0.934
     companionChangedOk: 0.5, 0.578
     confirmCraftingButton: 0.75, 0.553
+    confirmMultiRaidSummon: 0.5, 0.547
     confirmRefreshWithLapis: 0.693, 0.557
+    connectionErrorOk: 0.5, 0.578
     craftingSlot0: 0.5, 0.412
     craftingSlot1: 0.5, 0.554
     craftingSlot2: 0.5, 0.695
@@ -34,6 +36,7 @@
     dontRefreshWithLapis: 0.5, 0.617
     dontRequestFriend: 0.25, 0.732
     missionsNext: 0.5, 0.871
+    multiRaidSummon: 0.75, 0.664
     refreshWithLapis: 0.693, 0.512
     repeatActions: 0.375, 0.963
     resultsNext: 0.5, 0.879
@@ -42,3 +45,4 @@
     stageSelect2: 0.5, 0.644
     stageSelect3: 0.5, 0.781
     startCraftingButton: 0.75, 0.758
+    unitsObtainedNext: 0.5, 0.820

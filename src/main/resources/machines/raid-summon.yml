@@ -1,0 +1,37 @@
+name: Raid Summon
+description: Performs Multi-Summon for raid coins over and over again
+initialState: Start
+states:
+    Start:
+        transitions:
+            Summon Screen:
+                type: imageRegion
+                name: raidSummon.png
+                x: 145
+                y: 263
+    Summon Screen:
+        actions:
+            - type: tap
+              locations: multiRaidSummon
+            - type: delay
+              delay: PT0.5S
+            - type: tap
+              locations: confirmMultiRaidSummon
+        transitions:
+            Step Through Results:
+                type: time
+                delay: PT2S
+    Step Through Results:
+        actions:
+            - type: tap
+              locations: unitsObtainedNext
+              repeat: true
+            - type: tap
+              locations: resultsNext
+              repeat: true
+        transitions:
+            Summon Screen:
+                type: imageRegion
+                name: raidSummon.png
+                x: 145
+                y: 263
