@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage
 import java.time.Duration
 import java.time.ZonedDateTime
 import java.util.NoSuchElementException
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.LinkedBlockingDeque
 
@@ -35,6 +36,8 @@ class StateMachine(private val device: DeviceController, private val initialStat
 
     private var evaluator: TransitionEvaluator
     private var executor: ActionExecutor
+
+    private var counters: ConcurrentHashMap<String, Int> = ConcurrentHashMap()
 
     init {
         evaluator = TransitionEvaluator(initialState.transitions)
@@ -103,7 +106,7 @@ class StateMachine(private val device: DeviceController, private val initialStat
                 while (run) {
                     val screen = queue.take()
                     val now = ZonedDateTime.now()
-                    val gameState = GameState(screen, Duration.between(lastTransition, now), executor.actionQueue.toList())
+                    val gameState = GameState(screen, Duration.between(lastTransition, now), counters, executor.actionQueue.toList())
                     logger.trace("Game state : ${gameState}")
                     val nextState = transitions.firstOrNull {
                         logger.trace("Testing transition ${it}")
@@ -135,7 +138,7 @@ class StateMachine(private val device: DeviceController, private val initialStat
                 while (actionQueue.isNotEmpty() && run) {
                     val action = actionQueue.peek()
                     logger.info("Executing action ${action}")
-                    action.execute(device)
+                    action.execute(device, counters)
                     if (action.repeat()) {
                         actionQueue.addLast(action)
                     }

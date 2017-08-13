@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
  * @since 2017-05-09.
  */
 class DelayAction(val delay: Duration, repeat: Boolean): AbstractGameAction(repeat) {
-    override fun execute(controller: DeviceController) {
+    override fun execute(controller: DeviceController, counters: MutableMap<String, Int>) {
         val ms = TimeUnit.SECONDS.toMillis(delay.seconds) + TimeUnit.NANOSECONDS.toMillis(delay.nano.toLong());
         Thread.sleep(ms)
     }

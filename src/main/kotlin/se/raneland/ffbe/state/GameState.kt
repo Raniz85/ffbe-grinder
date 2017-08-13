@@ -12,4 +12,5 @@ import java.time.Duration
  * @author Raniz
  * @since 2017-04-10.
  */
-data class GameState(val screen: BufferedImage, val timeInState: Duration, val actionsRemaining: List<GameAction>)
+data class GameState(val screen: BufferedImage, val timeInState: Duration, val counters: Map<String, Int>,
+        val actionsRemaining: List<GameAction>)

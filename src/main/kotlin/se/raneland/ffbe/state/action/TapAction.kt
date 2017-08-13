@@ -6,8 +6,6 @@ package se.raneland.ffbe.state.action
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import se.raneland.ffbe.service.DeviceController
-import se.raneland.ffbe.service.Point
-import se.raneland.ffbe.state.action.AbstractGameAction
 import java.util.Random
 
 
@@ -25,7 +23,7 @@ class TapAction(repeat: Boolean = false, val locations: List<String>, val strate
 
     val random = Random()
 
-    override fun execute(controller: DeviceController) {
+    override fun execute(controller: DeviceController, counters: MutableMap<String, Int>) {
         when (strategy) {
             TAP_STRATEGY.ALL -> controller.tap(*locations.toTypedArray())
             TAP_STRATEGY.RANDOM -> {

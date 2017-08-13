@@ -18,7 +18,7 @@ class SelectItemAction(val character: Int, val item: Int, val target: String? = 
         const val MAX_PAGES_TO_SCROLL = 3
     }
 
-    override fun execute(controller: DeviceController) {
+    override fun execute(controller: DeviceController, counters: MutableMap<String, Int>) {
         // Enter item selection
         logger.info("Entering item selection at character${character}")
         controller.drag("character${character}", -0.25, 0.0)

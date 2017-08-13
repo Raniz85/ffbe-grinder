@@ -21,7 +21,7 @@ import se.raneland.ffbe.service.DeviceController
 )
 interface GameAction {
 
-    fun execute(controller: DeviceController)
+    fun execute(controller: DeviceController, counters: MutableMap<String, Int>)
 
     fun repeat(): Boolean
 }
