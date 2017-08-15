@@ -41,6 +41,7 @@ class MainWindow// Set up the UI
     val deviceList: JComboBox<Device>
     val logScroll: JScrollPane
     val logView: JTextArea
+    val counterView: JTextArea
     val startButton: JButton
     val stopButton: JButton
 
@@ -56,7 +57,7 @@ class MainWindow// Set up the UI
                 System.exit(0)
             }
         })
-        layout = MigLayout("fill", "[grow 0, shrink 0][fill][fill]", "[][][fill]")
+        layout = MigLayout("fill", "[grow 0, shrink 0][fill][fill]", "[][][fill, grow 3][fill, grow 1]")
         screenshot = ImagePanel()
         screenshot.preferredSize = Dimension(450, 800)
         screenshot.addMouseListener(object : MouseAdapter() {
@@ -68,7 +69,12 @@ class MainWindow// Set up the UI
                 }
             }
         })
-        add(screenshot, "cell 0 0 1 3")
+        add(screenshot, "cell 0 0 1 4")
+
+        counterView = JTextArea()
+        counterView.lineWrap = true
+        counterView.isEditable = false
+        add(counterView, "cell 1 3 2 1")
 
         deviceList = JComboBox()
         deviceController.devices.forEach {
@@ -97,7 +103,11 @@ class MainWindow// Set up the UI
                 val stateGraph = GraphSelector(this).select()
                 this.machine = stateGraph?.let {
                     startLogging()
-                    StateMachine(deviceController, it.initialState)
+                    StateMachine(deviceController, it.initialState).also {
+                        it.addListener { state ->
+                            counterView.text = state.counters.map { entry -> "${entry.key}: ${entry.value}" }.joinToString("\n")
+                        }
+                    }
                 }
                 startButton.isEnabled = this.machine == null
                 stopButton.isEnabled = this.machine != null
@@ -121,6 +131,7 @@ class MainWindow// Set up the UI
 
         logView = JTextArea()
         logView.lineWrap = true
+        logView.isEditable = false
         logScroll = JScrollPane(logView)
         logScroll.horizontalScrollBarPolicy = JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         add(logScroll, "cell 1 2 2 1")

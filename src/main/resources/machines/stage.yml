@@ -55,7 +55,7 @@ states:
     Companion Selection:
         actions:
             - type: tap
-              locations: [companion0, companion1, companion2, companion3, companion4]
+              locations: [companion0, companion1, companion2]
               strategy: random
         transitions:
             Party Selection:
@@ -71,7 +71,8 @@ states:
                 name: companionChanged.png
                 x: 106
                 y: 611
-            First Attack:
+            #First Attack:
+            Repeat Actions:
                 type: imageRegion
                 name: autoCombat.png
                 x: 5
@@ -87,7 +88,7 @@ states:
     First Attack:
         actions:
             - type: tap
-              locations: [character0, character1, character2, character3, character4]
+              locations: [character1, character3]
         transitions:
             Repeat Actions:
                 type: allActionsExecuted
@@ -107,6 +108,8 @@ states:
             - type: tap
               locations: resultsNext
               repeat: true
+            - type: incrementCounter
+              name: rounds
         transitions:
             Friend Request:
                 type: imageRegion

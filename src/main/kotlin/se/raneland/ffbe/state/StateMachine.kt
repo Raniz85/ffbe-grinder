@@ -16,11 +16,6 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.LinkedBlockingDeque
 
-interface StateListener {
-
-    fun stateChanged(state: MachineState, gameState: GameState)
-}
-
 /**
  * @author Raniz
  * @since 2017-01-14.
@@ -29,7 +24,7 @@ class StateMachine(private val device: DeviceController, private val initialStat
 
     companion object : KLogging()
 
-    private val listeners = CopyOnWriteArrayList<StateListener>()
+    private val listeners = CopyOnWriteArrayList<(GameState) -> Unit>()
 
     private var lastTransition = ZonedDateTime.now()
     private var state = initialState
@@ -37,7 +32,7 @@ class StateMachine(private val device: DeviceController, private val initialStat
     private var evaluator: TransitionEvaluator
     private var executor: ActionExecutor
 
-    private var counters: ConcurrentHashMap<String, Int> = ConcurrentHashMap()
+    val counters: ConcurrentHashMap<String, Int> = ConcurrentHashMap()
 
     init {
         evaluator = TransitionEvaluator(initialState.transitions)
@@ -50,9 +45,9 @@ class StateMachine(private val device: DeviceController, private val initialStat
         setState(initialState)
     }
 
-    fun addListener(listener: StateListener) = listeners.add(listener)
+    fun addListener(listener: (GameState) -> Unit) = listeners.add(listener)
 
-    fun removeListener(listener: StateListener) = listeners.remove(listener)
+    fun removeListener(listener: (GameState) -> Unit) = listeners.remove(listener)
 
     private fun setState(nextState: MachineState) {
         // Stop the current state
@@ -107,6 +102,7 @@ class StateMachine(private val device: DeviceController, private val initialStat
                     val screen = queue.take()
                     val now = ZonedDateTime.now()
                     val gameState = GameState(screen, Duration.between(lastTransition, now), counters, executor.actionQueue.toList())
+                    listeners.forEach { it.invoke(gameState) }
                     logger.trace("Game state : ${gameState}")
                     val nextState = transitions.firstOrNull {
                         logger.trace("Testing transition ${it}")
