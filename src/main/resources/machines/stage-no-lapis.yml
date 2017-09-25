@@ -11,6 +11,8 @@ states:
                 y: 554
     Quest Selection:
         actions:
+            - type: delay
+              delay: PT0.5S
             - type: tap
               locations: stageSelect1
         transitions:
@@ -44,7 +46,7 @@ states:
     Companion Selection:
         actions:
             - type: tap
-              locations: [companion0, companion1, companion2, companion3, companion4]
+              locations: [companion0, companion1, companion2]
               strategy: random
         transitions:
             Party Selection:
@@ -52,6 +54,8 @@ states:
                 delay: PT2S
     Party Selection:
         actions:
+            - type: delay
+              delay: PT0.5S
             - type: tap
               locations: depart
         transitions:
@@ -60,7 +64,7 @@ states:
                 name: companionChanged.png
                 x: 106
                 y: 611
-            First Attack:
+            Repeat Actions:
                 type: imageRegion
                 name: autoCombat.png
                 x: 5
@@ -73,13 +77,6 @@ states:
             Companion Selection:
                 type: time
                 delay: PT10S
-    First Attack:
-        actions:
-            - type: tap
-              locations: [character0, character1, character2, character3, character4]
-        transitions:
-            Repeat Actions:
-                type: allActionsExecuted
     Repeat Actions:
         actions:
             - type: tap
@@ -94,23 +91,10 @@ states:
     Results:
         actions:
             - type: tap
-              locations: [center, resultsNext]
-        transitions:
-            UnitResults:
-                type: time
-                delay: PT3S
-    UnitResults:
-        actions:
-            - type: tap
-              locations: [center, resultsNext]
-        transitions:
-            Item Results:
-                type: time
-                delay: PT3S
-    Item Results:
-        actions:
-            - type: tap
-              locations: [center, resultsNext]
+              locations: resultsNext
+              repeat: true
+            - type: incrementCounter
+              name: rounds
         transitions:
             Friend Request:
                 type: imageRegion
@@ -129,6 +113,8 @@ states:
                 y: 554
     Friend Request:
         actions:
+            - type: delay
+              delay: PT0.5S
             - type: tap
               locations: dontRequestFriend
         transitions:
@@ -152,4 +138,3 @@ states:
                 name: questSelection.png
                 x: 664
                 y: 554
-
